@@ -126,8 +126,11 @@ resource "aws_elasticsearch_domain" "default" {
     dedicated_master_type    = var.dedicated_master_type
     zone_awareness_enabled   = var.zone_awareness_enabled
 
-    zone_awareness_config {
-      availability_zone_count = var.availability_zone_count
+    dynamic "zone_awareness_config" {
+      for_each = var.availability_zone_count > 1 ? ["true"] : []
+      content {
+        availability_zone_count = var.availability_zone_count
+      }
     }
   }
 
